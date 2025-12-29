@@ -17,8 +17,8 @@ namespace CSHARP_L
             Console.OutputEncoding = Encoding.UTF8;
             Console.InputEncoding = Encoding.UTF8;
             Console.CursorVisible = false;
-            Console.Title = "Sector №First";
-            Console.SetWindowSize(100, 40);
+            Console.Title = "Sector First";
+            Console.SetWindowSize(150, 40);
             Random rand = new Random();
 
             char[,] map =
@@ -66,9 +66,10 @@ namespace CSHARP_L
 
             string playerName = "";
 
-            ConsoleKeyInfo openMenu = new ConsoleKeyInfo('\0', ConsoleKey.Escape, false, false, false);
-            //Menu(map, openMenu, playerName);
+            
             ShowForeword(map, ref playerName);
+            ConsoleKeyInfo openMenu = new ConsoleKeyInfo('\0', ConsoleKey.Escape, false, false, false);
+            Menu(map, openMenu, playerName);
 
             // Функция для обновления событий в игре
             void RefreshGameFrame(ConsoleKeyInfo keyInfo1)
@@ -145,33 +146,6 @@ namespace CSHARP_L
 
                 StartGameLevel(keyInfo);
             }
-        }
-
-        static void Menu1(char[,] map, ConsoleKeyInfo charKey, string playerName)
-        {
-
-            string MenuText = $"Привет, {playerName}! Что будем делать дальше?" +
-                $"\n" +
-                $"\n1. Играть" +
-                $"\n2. Уровни" +
-                $"\n3. Настройки" +
-                $"\n4. Выход из игры\n";
-
-            if (charKey.Key == ConsoleKey.Escape)
-            {
-                Console.Clear();
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine($"{MenuText}\n");
-                Console.ResetColor();
-                switch (charKey.Key)
-                {
-                    case ConsoleKey.D1 or ConsoleKey.NumPad1: Console.Clear(); break;
-                    case ConsoleKey.D2 or ConsoleKey.NumPad2: Console.Clear(); Console.WriteLine("T"); break;
-                    case ConsoleKey.D3 or ConsoleKey.NumPad3: Console.Clear(); Console.WriteLine("T"); break;
-                    case ConsoleKey.D4 or ConsoleKey.NumPad4: Console.Clear(); Console.WriteLine("Закрытие игры..."); System.Threading.Thread.Sleep(500); Environment.Exit(0); break;
-                }
-            }
-
         }
         static void Moovement(ref char[,] map, ConsoleKeyInfo charKey, ref int userX, ref int userY, char[] wallsList)
         {
@@ -328,12 +302,8 @@ namespace CSHARP_L
                 else {break;break; }
             }
             System.Threading.Thread.Sleep(mediumPause);
-            
 
-            ConsoleKeyInfo openMenu = new ConsoleKeyInfo('\0', ConsoleKey.Escape, false, false, false);
-            Menu1(map, openMenu, playerName);
         }
-
 
     }
 }
