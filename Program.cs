@@ -9,7 +9,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace CSHARP_L
 {
-    internal class Program
+    internal class SecFir
     {
         static void Main(string[] args)
         {
@@ -21,7 +21,7 @@ namespace CSHARP_L
             Console.SetWindowSize(150, 40);
             Random rand = new Random();
 
-            char[,] map =
+            char[,] map1 =
             {
                 {'┏','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','━','┓'},
                 {'┃',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','┃'},
@@ -67,8 +67,10 @@ namespace CSHARP_L
             string playerName = "";
 
             
-            ShowForeword(map, ref playerName);
+            //ShowForeword(map, ref playerName);
             ConsoleKeyInfo openMenu = new ConsoleKeyInfo('\0', ConsoleKey.Escape, false, false, false);
+
+            char[,] map = ReadMap("map.txt");
             Menu(map, openMenu, playerName);
 
             // Функция для обновления событий в игре
@@ -84,13 +86,19 @@ namespace CSHARP_L
             // Функция запуска уровня
             void StartGameLevel(ConsoleKeyInfo keyInfo) {
                 if (keyInfo.Key == ConsoleKey.D1 || keyInfo.Key == ConsoleKey.NumPad1) {
+
                     userY = 1; userX = 1;
                     Console.Clear();
+
                     DrawMap(map);
+                    RefreshGameFrame(keyInfo);
+
                     Console.SetCursorPosition(userX, userY);
                     Console.Write('@');
-                    Console.SetCursorPosition(0, 37);
+
+                    Console.SetCursorPosition(0, 55);
                     Console.WriteLine("Для выхода в меню нажмите Esc");
+
                     while (true) {
                         keyInfo = Console.ReadKey(true);
                         switch (keyInfo.Key) {
@@ -110,9 +118,10 @@ namespace CSHARP_L
                 }
             }
 
-            void Menu(char[,] map, ConsoleKeyInfo charKey, string playerName)
-            {
-
+            void Menu(char[,] map, ConsoleKeyInfo charKey, string playerName) {
+                /* 
+                 Сделать проверку по типу bool InMenu и далее уже получать кнопки и тд.
+                 */
                 string MenuText = $"Привет, {playerName}! Что будем делать дальше?" +
                     $"\n" +
                     $"\n1. Играть" +
@@ -120,8 +129,6 @@ namespace CSHARP_L
                     $"\n3. Настройки" +
                     $"\n4. Выход из игры\n";
 
-                if (charKey.Key == ConsoleKey.Escape)
-                {
                     Console.Clear();
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.WriteLine($"{MenuText}\n");
@@ -129,22 +136,35 @@ namespace CSHARP_L
                     switch (charKey.Key)
                     {
                         case ConsoleKey.D1 or ConsoleKey.NumPad1: Console.Clear(); StartGameLevel(charKey); break;
-                        case ConsoleKey.D2 or ConsoleKey.NumPad2: Console.Clear(); Console.WriteLine("T"); break;
-                        case ConsoleKey.D3 or ConsoleKey.NumPad3: Console.Clear(); Console.WriteLine("T"); break;
+
+                        case ConsoleKey.D2 or ConsoleKey.NumPad2:
+                        Console.Clear();
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("Уровни:");
+                        break;
+
+                        case ConsoleKey.D3 or ConsoleKey.NumPad3:
+                        Console.Clear();
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("Настройки:");
+                        Console.WriteLine("1. Цвет текста");
+                        Console.WriteLine("2. Выбрать символ как персонажа ( @, &, $ )");
+                        break;
+
                         case ConsoleKey.D4 or ConsoleKey.NumPad4: Console.Clear(); Console.WriteLine("Закрытие игры..."); System.Threading.Thread.Sleep(500); Environment.Exit(0); break;
                     }
-                }
-
+                //if (charKey.Key == ConsoleKey.Escape) { }
             }
 
             // Тело программы
-            while (true)
-            {
+            while (true) {
                 // Получаем введённую букву
                 ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+
+                if (keyInfo.Key == ConsoleKey.Escape) { Menu(map, keyInfo, playerName); }
                 Menu(map, keyInfo, playerName);
 
-                StartGameLevel(keyInfo);
+                //StartGameLevel(keyInfo);
             }
         }
         static void Moovement(ref char[,] map, ConsoleKeyInfo charKey, ref int userX, ref int userY, char[] wallsList)
@@ -175,9 +195,9 @@ namespace CSHARP_L
         }
         static void Inventory(ref char[,] map, int userY, int userX, List<char> Backpack)
         {
-            Console.SetCursorPosition(0, 34);
+            Console.SetCursorPosition(0, 44);
             Console.WriteLine("┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛");
-            Console.SetCursorPosition(18, 32);
+            Console.SetCursorPosition(18, 42);
             Console.Write("Inventory:");
 
             // Отрисовка вещей в инвентаре
@@ -196,7 +216,7 @@ namespace CSHARP_L
         }
         static void Healthbar(int value, int maxValue, ConsoleColor color = ConsoleColor.Green, ConsoleColor colorBackground = ConsoleColor.Red)
         {
-            Console.SetCursorPosition(0, 31);
+            Console.SetCursorPosition(0, 40);
             Console.WriteLine("┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓\n┃ Health Points");
             ConsoleColor defaultColor = Console.BackgroundColor;
             string bar = "";
@@ -208,9 +228,9 @@ namespace CSHARP_L
             }
 
             //Отрисовка бара ниже карты и установка цветов
-            Console.SetCursorPosition(0, 33);
+            Console.SetCursorPosition(0, 42);
             Console.WriteLine("┃ ");
-            Console.SetCursorPosition(2, 33);
+            Console.SetCursorPosition(2, 42);
             Console.Write('[');
             Console.BackgroundColor = color;
             Console.Write(bar);
@@ -227,18 +247,47 @@ namespace CSHARP_L
         }
         static void DrawMap(char[,] map)
         {
-            //Установка карты в левом верхнем углу
             Console.SetCursorPosition(0, 0);
-            for (int i = 0; i < map.GetLength(0); i++)
+            int width = map.GetLength(0);
+            int height = map.GetLength(1);
+
+            for (int y = 0; y < height; y++)
             {
-                for (int j = 0; j < map.GetLength(1); j++)
+                for (int x = 0; x < width; x++)
                 {
-                    Console.Write(map[i, j]);
+                    Console.Write(map[x, y]);
                 }
                 Console.WriteLine();
             }
         }
+        private static int GetMaxLenghtOfLine(string[] lines)
+        {
+            int maxLenght = lines[0].Length;
 
+            foreach (var line in lines)
+            {
+                if (line.Length > maxLenght)
+                {
+                    maxLenght = line.Length;
+                }
+            }
+            return maxLenght;
+        }
+        private static char[,] ReadMap(string path)
+        {
+            string[] file = File.ReadAllLines("map.txt");
+
+            char[,] map = new char[GetMaxLenghtOfLine(file), file.Length];
+
+            for (int x = 0; x < map.GetLength(0); x++)
+            {
+                for (int y = 0; y < map.GetLength(1); y++)
+                {
+                    map[x, y] = file[y][x];
+                }
+            }
+            return map;
+        }
         static void ShowForeword(char[,] map,ref string playerName)
         {
             int noPause = 0;
