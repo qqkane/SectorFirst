@@ -9,7 +9,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace CSHARP_L
 {
-    internal class SecFir
+    internal class Program
     {
         static void Main(string[] args)
         {
